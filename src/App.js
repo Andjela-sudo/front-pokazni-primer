@@ -1,24 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import Item from "./Item";
+
+import {BrowserRouter as Router , Link , Switch, Route} from 'react-router-dom'
+import Items from "./Items";
+import { useEffect, useState } from "react";
+import { getAll } from "./service";
 
 function App() {
+  const [items,setItems] = useState([])
+  useEffect(()=>{
+    getAll().then(res => {
+      setItems(res.data)
+    })
+  },[])
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Link to ="/hello"><Item/></Link>
+      <Link to = "/items">ITEMS SA SERVERA</Link>
+      <Switch>
+        <Route exact path="/hello">
+          <p>HELLO</p>
+        </Route>
+        <Route exact path="/items">
+          <Items items={items}/>
+        </Route>
+      </Switch>
+    </Router>
   );
 }
 
